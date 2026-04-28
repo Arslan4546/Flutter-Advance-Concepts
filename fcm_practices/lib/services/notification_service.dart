@@ -46,7 +46,6 @@ class NotificationService {
       onDidReceiveNotificationResponse: (response) {
         if (response.payload != null) {
           final data = response.payload!.split("|");
-
           _navigateFromPayload(data);
         }
       },
