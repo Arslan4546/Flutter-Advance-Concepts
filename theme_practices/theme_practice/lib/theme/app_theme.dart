@@ -3,8 +3,11 @@ import 'package:theme_practice/theme/app_fonts.dart';
 import 'app_colors.dart';
 
 class AppTheme {
+  // Private constructor to prevent instantiation
+  AppTheme._();
+
   // 🔹 LIGHT THEME
-  static ThemeData lightTheme = ThemeData(
+  static ThemeData get lightTheme => ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
 
@@ -38,7 +41,7 @@ class AppTheme {
   );
 
   // 🔹 DARK THEME
-  static ThemeData darkTheme = ThemeData(
+  static ThemeData get darkTheme => ThemeData(
     useMaterial3: true,
     brightness: Brightness.dark,
 

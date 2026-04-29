@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
+  // Private constructor to prevent instantiation
+  AppColors._();
+
   // 🔹 PRIMARY
   static const Color primary = Color(0xFF6750A4);
   static const Color secondary = Color(0xFF625B71);
