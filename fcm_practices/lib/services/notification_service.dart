@@ -76,7 +76,6 @@ class NotificationService {
     }
   }
 
-  // 🔥 FOREGROUND CLICK NAVIGATION
   void _navigateFromPayload(List<String> data) {
     final screen = data[0];
     final userId = data[1];
