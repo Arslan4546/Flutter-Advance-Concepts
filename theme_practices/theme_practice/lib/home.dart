@@ -15,16 +15,16 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Bloc Theme UI"),
         actions: [
-          // Theme toggle button
-          IconButton(
-            onPressed: () {
-              context.read<ThemeBloc>().add(const ToggleThemeEvent());
+          BlocBuilder<ThemeBloc, ThemeState>(
+            builder: (context, state) {
+              return IconButton(
+                onPressed: () {
+                  context.read<ThemeBloc>().add(const ToggleThemeEvent());
+                },
+                icon: Icon(_getThemeIcon(state.themeMode)),
+                tooltip: _getThemeTooltip(state.themeMode),
+              );
             },
-            icon: Icon(
-              theme.brightness == Brightness.dark
-                  ? Icons.light_mode
-                  : Icons.dark_mode,
-            ),
           ),
         ],
       ),
@@ -44,11 +44,7 @@ class HomeScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(16),
                     child: Row(
                       children: [
-                        Icon(
-                          state.themeMode == ThemeMode.light
-                              ? Icons.light_mode
-                              : Icons.dark_mode,
-                        ),
+                        Icon(_getThemeIcon(state.themeMode)),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Column(
@@ -60,9 +56,7 @@ class HomeScreen extends StatelessWidget {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                state.themeMode == ThemeMode.light
-                                    ? 'Light Mode'
-                                    : 'Dark Mode',
+                                _getThemeModeName(state.themeMode),
                                 style: theme.textTheme.bodyMedium,
                               ),
                             ],
@@ -95,5 +89,38 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  IconData _getThemeIcon(ThemeMode mode) {
+    switch (mode) {
+      case ThemeMode.system:
+        return Icons.brightness_auto;
+      case ThemeMode.light:
+        return Icons.light_mode;
+      case ThemeMode.dark:
+        return Icons.dark_mode;
+    }
+  }
+
+  String _getThemeModeName(ThemeMode mode) {
+    switch (mode) {
+      case ThemeMode.system:
+        return 'System Default (Auto)';
+      case ThemeMode.light:
+        return 'Light Mode';
+      case ThemeMode.dark:
+        return 'Dark Mode';
+    }
+  }
+
+  String _getThemeTooltip(ThemeMode mode) {
+    switch (mode) {
+      case ThemeMode.system:
+        return 'Switch to Light Mode';
+      case ThemeMode.light:
+        return 'Switch to Dark Mode';
+      case ThemeMode.dark:
+        return 'Switch to System Default';
+    }
   }
 }

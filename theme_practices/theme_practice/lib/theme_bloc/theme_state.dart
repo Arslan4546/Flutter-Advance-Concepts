@@ -6,8 +6,8 @@ class ThemeState extends Equatable {
 
   const ThemeState({required this.themeMode});
 
-  // Initial state
-  factory ThemeState.initial() => const ThemeState(themeMode: ThemeMode.light);
+  // Initial state - follows device theme
+  factory ThemeState.initial() => const ThemeState(themeMode: ThemeMode.system);
 
   @override
   List<Object> get props => [themeMode];
