@@ -21,8 +21,11 @@ class HomeScreen extends StatelessWidget {
                 onPressed: () {
                   context.read<ThemeBloc>().add(const ToggleThemeEvent());
                 },
-                icon: Icon(_getThemeIcon(state.themeMode)),
-                tooltip: _getThemeTooltip(state.themeMode),
+                icon: Icon(
+                  state.themeMode == ThemeMode.light
+                      ? Icons.light_mode
+                      : Icons.dark_mode,
+                ),
               );
             },
           ),
@@ -44,7 +47,6 @@ class HomeScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(16),
                     child: Row(
                       children: [
-                        Icon(_getThemeIcon(state.themeMode)),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Column(
@@ -56,7 +58,7 @@ class HomeScreen extends StatelessWidget {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                _getThemeModeName(state.themeMode),
+                                "Your Selected Theme",
                                 style: theme.textTheme.bodyMedium,
                               ),
                             ],
@@ -89,38 +91,5 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  IconData _getThemeIcon(ThemeMode mode) {
-    switch (mode) {
-      case ThemeMode.system:
-        return Icons.brightness_auto;
-      case ThemeMode.light:
-        return Icons.light_mode;
-      case ThemeMode.dark:
-        return Icons.dark_mode;
-    }
-  }
-
-  String _getThemeModeName(ThemeMode mode) {
-    switch (mode) {
-      case ThemeMode.system:
-        return 'System Default (Auto)';
-      case ThemeMode.light:
-        return 'Light Mode';
-      case ThemeMode.dark:
-        return 'Dark Mode';
-    }
-  }
-
-  String _getThemeTooltip(ThemeMode mode) {
-    switch (mode) {
-      case ThemeMode.system:
-        return 'Switch to Light Mode';
-      case ThemeMode.light:
-        return 'Switch to Dark Mode';
-      case ThemeMode.dark:
-        return 'Switch to System Default';
-    }
   }
 }
