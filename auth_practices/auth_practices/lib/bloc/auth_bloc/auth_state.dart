@@ -8,17 +8,14 @@ abstract class AuthState extends Equatable {
   List<Object?> get props => [];
 }
 
-/// Initial state before any check
 class AuthInitial extends AuthState {
   const AuthInitial();
 }
 
-/// Auth operation in progress for splash/sign-out (no active button on screen)
 class AuthLoading extends AuthState {
   const AuthLoading();
 }
 
-/// Email/password sign-in or sign-up in progress
 class AuthEmailLoading extends AuthState {
   const AuthEmailLoading();
 }

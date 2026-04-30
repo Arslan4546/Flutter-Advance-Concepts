@@ -21,7 +21,6 @@ class AuthSignUpRequested extends AuthEvent {
   List<Object?> get props => [email, password];
 }
 
-/// Sign in with email + password
 class AuthSignInRequested extends AuthEvent {
   final String email;
   final String password;
