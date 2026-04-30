@@ -10,9 +10,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthCheckRequested>(_onAuthCheckRequested);
     on<AuthSignUpRequested>(_onSignUpRequested);
     on<AuthSignInRequested>(_onSignInRequested);
-    on<AuthGoogleSignInRequested>(_onGoogleSignInRequested);
     on<AuthSignOutRequested>(_onSignOutRequested);
-    on<AuthPasswordResetRequested>(_onPasswordResetRequested);
   }
 
   Future<void> _onAuthCheckRequested(
@@ -70,25 +68,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  Future<void> _onGoogleSignInRequested(
-    AuthGoogleSignInRequested event,
-    Emitter<AuthState> emit,
-  ) async {
-    emit(const AuthGoogleLoading());
-    try {
-      final user = await _authRepo.signInWithGoogle(isLogin: event.isLogin);
-      if (user != null) {
-        emit(AuthAuthenticated(user: user));
-      } else {
-        // User cancelled the Google picker — return to unauthenticated silently
-        emit(const AuthUnauthenticated());
-      }
-    } catch (e) {
-      final message = e.toString().replaceFirst('Exception: ', '');
-      emit(AuthError(message: message));
-    }
-  }
-
   Future<void> _onSignOutRequested(
     AuthSignOutRequested event,
     Emitter<AuthState> emit,
@@ -97,25 +76,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       await _authRepo.signOut();
       emit(const AuthUnauthenticated());
-    } catch (e) {
-      final message = e.toString().replaceFirst('Exception: ', '');
-      emit(AuthError(message: message));
-    }
-  }
-
-  Future<void> _onPasswordResetRequested(
-    AuthPasswordResetRequested event,
-    Emitter<AuthState> emit,
-  ) async {
-    emit(const AuthPasswordResetLoading());
-    try {
-      await _authRepo.sendPasswordResetEmail(event.email);
-      emit(
-        const AuthPasswordResetSuccess(
-          message:
-              'Password reset link has been sent to your email. Please check your inbox.',
-        ),
-      );
     } catch (e) {
       final message = e.toString().replaceFirst('Exception: ', '');
       emit(AuthError(message: message));

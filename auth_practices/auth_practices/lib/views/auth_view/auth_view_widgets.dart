@@ -125,8 +125,6 @@ class OrDivider extends StatelessWidget {
   }
 }
 
-// ─── Google Sign-In Button ────────────────────────────────────────────────────
-
 class GoogleSignInButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool isLoading;
@@ -153,10 +151,7 @@ class GoogleSignInButton extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: Colors.grey.shade200,
-                width: 1,
-              ),
+              border: Border.all(color: Colors.grey.shade200, width: 1),
             ),
             child: isLoading
                 ? const Center(
@@ -174,7 +169,7 @@ class GoogleSignInButton extends StatelessWidget {
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const _GoogleLogo(size: 22),
+                      _GoogleLogo(size: 24),
                       const SizedBox(width: 12),
                       const Text(
                         'Continue with Google',
@@ -194,18 +189,13 @@ class GoogleSignInButton extends StatelessWidget {
   }
 }
 
-// ─── Google "G" Logo Painter ──────────────────────────────────────────────────
-
 class _GoogleLogo extends StatelessWidget {
   final double size;
   const _GoogleLogo({required this.size});
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      size: Size(size, size),
-      painter: _GoogleLogoPainter(),
-    );
+    return CustomPaint(size: Size(size, size), painter: _GoogleLogoPainter());
   }
 }
 
@@ -217,14 +207,12 @@ class _GoogleLogoPainter extends CustomPainter {
     final double r = size.width / 2;
 
     // Clipping circle
-    canvas.clipPath(Path()..addOval(Rect.fromCircle(center: Offset(cx, cy), radius: r)));
+    canvas.clipPath(
+      Path()..addOval(Rect.fromCircle(center: Offset(cx, cy), radius: r)),
+    );
 
     // White background
-    canvas.drawCircle(
-      Offset(cx, cy),
-      r,
-      Paint()..color = Colors.white,
-    );
+    canvas.drawCircle(Offset(cx, cy), r, Paint()..color = Colors.white);
 
     final rect = Rect.fromCircle(center: Offset(cx, cy), radius: r * 0.78);
 

@@ -41,12 +41,6 @@ class _SignupViewState extends State<SignupView> {
     }
   }
 
-  void _onGoogleSignInTapped() {
-    context.read<AuthBloc>().add(
-      const AuthGoogleSignInRequested(isLogin: false),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
@@ -237,13 +231,11 @@ class _SignupViewState extends State<SignupView> {
                         BlocBuilder<AuthBloc, AuthState>(
                           builder: (context, state) {
                             final isEmailLoading = state is AuthEmailLoading;
-                            final isGoogleLoading = state is AuthGoogleLoading;
-                            final isAnyLoading =
-                                isEmailLoading || isGoogleLoading;
+                            final isAnyLoading = isEmailLoading;
 
                             return Column(
                               children: [
-                                // Create Account button
+                                // Sign Up button
                                 SizedBox(
                                   width: double.infinity,
                                   height: 56,
@@ -308,10 +300,10 @@ class _SignupViewState extends State<SignupView> {
                                 const OrDivider(),
                                 const SizedBox(height: 24),
                                 // Google Sign-In button
-                                GoogleSignInButton(
-                                  isLoading: isGoogleLoading,
-                                  onPressed: _onGoogleSignInTapped,
-                                ),
+                                // GoogleSignInButton(
+                                //   isLoading: isGoogleLoading,
+                                //   onPressed: _onGoogleSignInTapped,
+                                // ),
                               ],
                             );
                           },
@@ -322,7 +314,7 @@ class _SignupViewState extends State<SignupView> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Already have an account?  ',
+                              'Already have an account?',
                               style: TextStyle(
                                 color: Colors.white.withValues(alpha: 0.5),
                                 fontSize: 14,

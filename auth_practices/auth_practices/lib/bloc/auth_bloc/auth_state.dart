@@ -23,12 +23,6 @@ class AuthEmailLoading extends AuthState {
   const AuthEmailLoading();
 }
 
-/// Google sign-in or sign-up in progress
-class AuthGoogleLoading extends AuthState {
-  const AuthGoogleLoading();
-}
-
-/// User is signed in
 class AuthAuthenticated extends AuthState {
   final User user;
 
@@ -38,31 +32,14 @@ class AuthAuthenticated extends AuthState {
   List<Object?> get props => [user.uid];
 }
 
-/// User is not signed in
 class AuthUnauthenticated extends AuthState {
   const AuthUnauthenticated();
 }
 
-/// An auth operation failed
 class AuthError extends AuthState {
   final String message;
 
   const AuthError({required this.message});
-
-  @override
-  List<Object?> get props => [message];
-}
-
-/// Password reset loading
-class AuthPasswordResetLoading extends AuthState {
-  const AuthPasswordResetLoading();
-}
-
-/// Password reset success
-class AuthPasswordResetSuccess extends AuthState {
-  final String message;
-
-  const AuthPasswordResetSuccess({required this.message});
 
   @override
   List<Object?> get props => [message];

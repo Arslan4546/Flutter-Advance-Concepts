@@ -40,12 +40,6 @@ class _LoginViewState extends State<LoginView> {
     }
   }
 
-  void _onGoogleSignInTapped() {
-    context.read<AuthBloc>().add(
-      const AuthGoogleSignInRequested(isLogin: true),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
@@ -212,9 +206,7 @@ class _LoginViewState extends State<LoginView> {
                         BlocBuilder<AuthBloc, AuthState>(
                           builder: (context, state) {
                             final isEmailLoading = state is AuthEmailLoading;
-                            final isGoogleLoading = state is AuthGoogleLoading;
-                            final isAnyLoading =
-                                isEmailLoading || isGoogleLoading;
+                            final isAnyLoading = isEmailLoading;
 
                             return Column(
                               children: [
@@ -282,11 +274,12 @@ class _LoginViewState extends State<LoginView> {
                                 // OR divider
                                 const OrDivider(),
                                 const SizedBox(height: 24),
+
                                 // Google Sign-In button
-                                GoogleSignInButton(
-                                  isLoading: isGoogleLoading,
-                                  onPressed: _onGoogleSignInTapped,
-                                ),
+                                // GoogleSignInButton(
+                                //   isLoading: state is AuthPhoneLoading,
+                                //   onPressed: _onPhoneSignInTapped,
+                                // ),
                               ],
                             );
                           },
