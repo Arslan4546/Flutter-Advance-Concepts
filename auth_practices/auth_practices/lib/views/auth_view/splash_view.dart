@@ -1,10 +1,9 @@
 import 'package:auth_practices/bloc/auth_bloc/auth_bloc.dart';
 import 'package:auth_practices/bloc/auth_bloc/auth_event.dart';
 import 'package:auth_practices/bloc/auth_bloc/auth_state.dart';
-import 'package:auth_practices/views/auth_view/login_view.dart';
-import 'package:auth_practices/views/home_view/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -63,13 +62,9 @@ class _SplashViewState extends State<SplashView>
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthAuthenticated) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => const HomeView()),
-          );
+          context.go('/home');
         } else if (state is AuthUnauthenticated) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => const LoginView()),
-          );
+          context.go('/login');
         }
       },
       child: Scaffold(

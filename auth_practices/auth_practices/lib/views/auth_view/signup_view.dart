@@ -6,6 +6,7 @@ import 'package:auth_practices/views/auth_view/auth_view_widgets.dart';
 import 'package:auth_practices/views/home_view/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class SignupView extends StatefulWidget {
   const SignupView({super.key});
@@ -52,9 +53,7 @@ class _SignupViewState extends State<SignupView> {
             title: 'Success',
           );
           if (context.mounted) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => const HomeView()),
-            );
+            context.go("/home");
           }
         } else if (state is AuthError) {
           await FlushbarHelper.showError(
