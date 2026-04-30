@@ -1,4 +1,5 @@
 import 'package:auth_practices/bloc/auth_bloc/auth_bloc.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:auth_practices/data/repositories/auth_repo.dart';
 import 'package:auth_practices/firebase_options.dart';
 import 'package:auth_practices/views/auth_view/splash_view.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await GoogleSignIn.instance.initialize();
   runApp(const AuthApp());
 }
 

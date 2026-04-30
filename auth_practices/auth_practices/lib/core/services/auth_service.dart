@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
 
   User? get currentUser => _firebaseAuth.currentUser;
 
@@ -31,7 +32,7 @@ class AuthService {
   /// Step 1 — Shows the Google account picker.
   /// Returns null if the user cancelled.
   Future<GoogleSignInAccount?> getGoogleAccount() async {
-    return await _googleSignIn.signIn();
+    return await _googleSignIn.authenticate();
   }
 
   /// Step 2 — Completes the Firebase sign-in using an already-selected
