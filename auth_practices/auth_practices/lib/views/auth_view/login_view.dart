@@ -4,10 +4,11 @@ import 'package:auth_practices/bloc/auth_bloc/auth_state.dart';
 import 'package:auth_practices/core/utils/flushbar_helper.dart';
 import 'package:auth_practices/views/auth_view/auth_view_widgets.dart';
 import 'package:auth_practices/views/auth_view/signup_view.dart';
-import 'package:auth_practices/views/home_view/home_view.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -40,16 +41,16 @@ class _LoginViewState extends State<LoginView> {
     }
   }
 
+  void _onGoogleSignInTapped() {
+    context.read<AuthBloc>().add(AuthGoogleLoginRequested());
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) async {
         if (state is AuthAuthenticated) {
-          if (context.mounted) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => const HomeView()),
-            );
-          }
+          context.go('/home');
         } else if (state is AuthError) {
           await FlushbarHelper.showError(
             context: context,
@@ -249,7 +250,7 @@ class _LoginViewState extends State<LoginView> {
                                           ),
                                         ),
                                       ),
-                                      child: isEmailLoading
+                                      child: isAnyLoading
                                           ? const SizedBox(
                                               width: 24,
                                               height: 24,
@@ -276,10 +277,19 @@ class _LoginViewState extends State<LoginView> {
                                 const SizedBox(height: 24),
 
                                 // Google Sign-In button
-                                // GoogleSignInButton(
-                                //   isLoading: state is AuthPhoneLoading,
-                                //   onPressed: _onPhoneSignInTapped,
-                                // ),
+                                // ✅ CORRECT — buildWhen bilkul hata do
+                                BlocBuilder<AuthBloc, AuthState>(
+                                  builder: (context, state) {
+                                    final isGoogleLoading =
+                                        state is AuthLoading;
+                                    return GoogleSignInButton(
+                                      isLoading: isGoogleLoading,
+                                      onPressed: isGoogleLoading
+                                          ? null
+                                          : _onGoogleSignInTapped,
+                                    );
+                                  },
+                                ),
                               ],
                             );
                           },

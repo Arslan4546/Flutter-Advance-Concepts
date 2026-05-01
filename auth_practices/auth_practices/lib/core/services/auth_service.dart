@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   User? get currentUser => _firebaseAuth.currentUser;
 
@@ -28,7 +30,50 @@ class AuthService {
     );
   }
 
+  // ─── GOOGLE SIGN IN ───────────────────────────────────────────
+  Future<UserCredential> loginWithGoogle() async {
+    try {
+      // Sign out first to force account picker every time
+      await _googleSignIn.signOut();
+
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+
+      if (googleUser == null) {
+        // User cancelled the picker
+        throw Exception('google-login-cancelled');
+      }
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      if (googleAuth.idToken == null) {
+        print('idToken: ${googleAuth.idToken}');
+        print('accessToken: ${googleAuth.accessToken}');
+        throw Exception('google-login-failed');
+      }
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      return await _firebaseAuth.signInWithCredential(credential);
+    } on FirebaseAuthException {
+      rethrow; // Let bloc handle Firebase errors
+    } catch (e) {
+      final msg = e.toString();
+      if (msg.contains('google-login-cancelled')) {
+        throw Exception('google-login-cancelled');
+      }
+      throw Exception('google-login-failed');
+    }
+  }
+
+  Future<UserCredential> signUpWithGoogle() async {
+    return await loginWithGoogle();
+  }
+
   Future<void> signOut() async {
-    await _firebaseAuth.signOut();
+    await Future.wait([_googleSignIn.signOut(), _firebaseAuth.signOut()]);
   }
 }
