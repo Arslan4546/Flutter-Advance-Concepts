@@ -44,14 +44,6 @@ class AuthRepo {
     }
   }
 
-  Future<UserCredential> googleLogin() async {
-    return await _authService.loginWithGoogle();
-  }
-
-  Future<UserCredential> googleSignUp() async {
-    return await _authService.signUpWithGoogle();
-  }
-
   Future<void> signOut() async {
     try {
       await _authService.signOut();
@@ -76,7 +68,7 @@ class AuthRepo {
         return 'Password is required.';
 
       case 'email-already-in-use':
-        return 'An account already exists with this email. Please login instead.';
+        return 'This email is already registered. Please login instead.';
 
       case 'weak-password':
         return 'Password is too weak. Use at least 6 characters.';
@@ -113,60 +105,6 @@ class AuthRepo {
 
       case 'invalid-user-token':
         return 'Authentication session is invalid. Please login again.';
-
-      // =========================================================
-      // GOOGLE LOGIN CUSTOM BUSINESS ERRORS
-      // =========================================================
-
-      case 'google-password-conflict':
-        return 'This email is registered with email/password. Kindly login using password.';
-
-      case 'google-login-cancelled':
-        return 'Google sign in was cancelled by user.';
-
-      case 'google-login-failed':
-        return 'Unable to login with Google right now. Please try again.';
-
-      case 'google-account-not-found':
-        return 'No Google account found. Please sign up first.';
-
-      // =========================================================
-      // GOOGLE SIGNUP CUSTOM BUSINESS ERRORS
-      // =========================================================
-
-      case 'google-already-used':
-        return 'This Google account is already registered. Please login instead.';
-
-      case 'google-signup-cancelled':
-        return 'Google sign up was cancelled by user.';
-
-      case 'google-signup-failed':
-        return 'Unable to sign up with Google right now. Please try again.';
-
-      // =========================================================
-      // GOOGLE / FIREBASE PROVIDER CONFLICT ERRORS
-      // =========================================================
-
-      case 'account-exists-with-different-credential':
-        return 'This email is already linked with another sign-in provider.';
-
-      case 'popup-closed-by-user':
-        return 'Google authentication was cancelled.';
-
-      case 'popup-blocked':
-        return 'Google authentication popup was blocked. Please allow popups and try again.';
-
-      case 'invalid-verification-code':
-        return 'Google verification failed. Please try again.';
-
-      case 'invalid-verification-id':
-        return 'Google authentication session is invalid.';
-
-      case 'provider-already-linked':
-        return 'This Google account is already linked with this user.';
-
-      case 'requires-recent-login':
-        return 'Please login again to continue this action.';
 
       // =========================================================
       // DEFAULT FALLBACK

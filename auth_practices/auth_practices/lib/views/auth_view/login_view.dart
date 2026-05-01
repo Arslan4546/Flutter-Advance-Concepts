@@ -41,10 +41,6 @@ class _LoginViewState extends State<LoginView> {
     }
   }
 
-  void _onGoogleSignInTapped() {
-    context.read<AuthBloc>().add(AuthGoogleLoginRequested());
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
@@ -180,22 +176,16 @@ class _LoginViewState extends State<LoginView> {
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(
-                            onPressed: () {
-                              // Navigator.of(context).push(
-                              //   MaterialPageRoute(
-                              //     builder: (_) => const ForgotPasswordView(),
-                              //   ),
-                              // );
-                            },
+                            onPressed: null, // Disabled
                             style: TextButton.styleFrom(
                               padding: EdgeInsets.zero,
                               minimumSize: const Size(50, 30),
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
-                            child: const Text(
+                            child: Text(
                               'Forgot Password?',
                               style: TextStyle(
-                                color: Color(0xFF66BB6A),
+                                color: Colors.grey.withValues(alpha: 0.5),
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -270,25 +260,6 @@ class _LoginViewState extends State<LoginView> {
                                             ),
                                     ),
                                   ),
-                                ),
-                                const SizedBox(height: 24),
-                                // OR divider
-                                const OrDivider(),
-                                const SizedBox(height: 24),
-
-                                // Google Sign-In button
-                                // ✅ CORRECT — buildWhen bilkul hata do
-                                BlocBuilder<AuthBloc, AuthState>(
-                                  builder: (context, state) {
-                                    final isGoogleLoading =
-                                        state is AuthLoading;
-                                    return GoogleSignInButton(
-                                      isLoading: isGoogleLoading,
-                                      onPressed: isGoogleLoading
-                                          ? null
-                                          : _onGoogleSignInTapped,
-                                    );
-                                  },
                                 ),
                               ],
                             );

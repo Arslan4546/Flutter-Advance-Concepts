@@ -42,25 +42,45 @@ class _SignupViewState extends State<SignupView> {
     }
   }
 
-  void _onGoogleSignInTapped() {
-    context.read<AuthBloc>().add(AuthGoogleLoginRequested());
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
-      listener: (context, state) async {
-        if (state is AuthAuthenticated) {
-          context.go('/home');
+      listenWhen: (previous, current) {
+        // Always listen to state changes
+        print(
+          '🎯 listenWhen - Previous: ${previous.runtimeType}, Current: ${current.runtimeType}',
+        );
+        return true;
+      },
+      listener: (context, state) {
+        print('🔔 SignupView BlocListener - State: ${state.runtimeType}');
 
-          // Flushbar home screen pe show hoga
-          FlushbarHelper.showSuccess(
-            context: context,
-            message: 'Welcome! You\'re signed in successfully 🎉',
-            title: 'Success',
-          );
+        if (state is AuthAuthenticated) {
+          print('✅ AuthAuthenticated - User: ${state.user.email}');
+          print('📍 Attempting navigation to /home');
+
+          // Use WidgetsBinding to ensure navigation happens after build
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (context.mounted) {
+              print('📍 Executing context.go(/home)');
+              context.go('/home');
+
+              // Show success message after navigation
+              Future.delayed(const Duration(milliseconds: 500), () {
+                if (context.mounted) {
+                  print('🎉 Showing success Flushbar');
+                  FlushbarHelper.showSuccess(
+                    context: context,
+                    message: 'Welcome! You\'re signed in successfully 🎉',
+                    title: 'Success',
+                  );
+                }
+              });
+            }
+          });
         } else if (state is AuthError) {
-          await FlushbarHelper.showError(
+          print('❌ AuthError - Message: ${state.message}');
+          FlushbarHelper.showError(
             context: context,
             message: state.message,
             title: 'Sign Up Failed',
@@ -297,24 +317,6 @@ class _SignupViewState extends State<SignupView> {
                                             ),
                                     ),
                                   ),
-                                ),
-                                const SizedBox(height: 24),
-                                // OR divider
-                                // const OrDivider(),
-                                const SizedBox(height: 24),
-                                // Google Sign-In button
-                                BlocBuilder<AuthBloc, AuthState>(
-                                  builder: (context, state) {
-                                    final isGoogleLoading =
-                                        state is AuthLoading;
-
-                                    return GoogleSignInButton(
-                                      isLoading: isGoogleLoading,
-                                      onPressed: isGoogleLoading
-                                          ? null
-                                          : _onGoogleSignInTapped,
-                                    );
-                                  },
                                 ),
                               ],
                             );
