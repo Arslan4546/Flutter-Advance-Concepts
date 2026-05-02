@@ -47,6 +47,11 @@ class _LoginViewState extends State<LoginView> {
       listener: (context, state) async {
         if (state is AuthAuthenticated) {
           context.go('/home');
+          await FlushbarHelper.showError(
+            context: context,
+            message: "Welcome! You\'re signed in successfully 🎉",
+            title: 'Sign In Successflly',
+          );
         } else if (state is AuthError) {
           await FlushbarHelper.showError(
             context: context,

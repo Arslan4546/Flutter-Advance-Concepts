@@ -1,9 +1,12 @@
+import 'package:auth_practices/bloc/camera_bloc/camera_bloc.dart';
+import 'package:auth_practices/core/services/camera_service.dart';
 import 'package:auth_practices/views/auth_view/login_view.dart';
 import 'package:auth_practices/views/auth_view/signup_view.dart';
 import 'package:auth_practices/views/phone_auth_view/phone_screen.dart';
 import 'package:auth_practices/views/phone_auth_view/otp_screen.dart';
 import 'package:auth_practices/views/splash_view/splash_view.dart';
 import 'package:auth_practices/views/home_view/home_view.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 final GoRouter appRouter = GoRouter(
@@ -29,6 +32,12 @@ final GoRouter appRouter = GoRouter(
         );
       },
     ),
-    GoRoute(path: '/home', builder: (context, state) => const HomeView()),
+    GoRoute(
+      path: '/home',
+      builder: (context, state) => BlocProvider(
+        create: (_) => CameraBloc(CameraService()),
+        child: const HomeView(),
+      ),
+    ),
   ],
 );
