@@ -265,6 +265,40 @@ class _LoginViewState extends State<LoginView> {
                             );
                           },
                         ),
+                        const SizedBox(height: 24),
+                        // Phone Auth button
+                        SizedBox(
+                          width: double.infinity,
+                          height: 56,
+                          child: OutlinedButton.icon(
+                            onPressed: () => context.go('/phone-auth'),
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide(
+                                color: const Color(
+                                  0xFF43A047,
+                                ).withValues(alpha: 0.5),
+                                width: 2,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                            icon: const Icon(
+                              Icons.phone_android_rounded,
+                              color: Color(0xFF66BB6A),
+                              size: 24,
+                            ),
+                            label: const Text(
+                              'Sign In with Phone',
+                              style: TextStyle(
+                                color: Color(0xFF66BB6A),
+                                fontSize: 17,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ),
+                        ),
                         const SizedBox(height: 32),
                         // Sign up link
                         Row(

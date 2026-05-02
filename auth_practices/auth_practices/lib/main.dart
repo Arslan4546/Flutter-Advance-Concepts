@@ -1,5 +1,6 @@
 import 'package:auth_practices/bloc/auth_bloc/auth_bloc.dart';
 import 'package:auth_practices/bloc/auth_bloc/auth_event.dart';
+import 'package:auth_practices/bloc/phone_auth/phone_auth_bloc.dart';
 import 'package:auth_practices/routes/app_routes.dart';
 import 'package:auth_practices/data/repositories/auth_repo.dart';
 import 'package:auth_practices/firebase_options.dart';
@@ -19,8 +20,13 @@ class AuthApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AuthBloc>(
-      create: (_) => AuthBloc(AuthRepo())..add(AuthCheckRequested()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => AuthBloc(AuthRepo())..add(const AuthCheckRequested()),
+        ),
+        BlocProvider(create: (_) => PhoneAuthBloc()),
+      ],
       child: MaterialApp.router(
         routerConfig: appRouter,
         debugShowCheckedModeBanner: false,

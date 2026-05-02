@@ -41,3 +41,22 @@ class AuthError extends AuthState {
   @override
   List<Object?> get props => [message];
 }
+
+// ─── PHONE AUTHENTICATION STATES ──────────────────────────────────
+class AuthPhoneLoading extends AuthState {
+  const AuthPhoneLoading();
+}
+
+class AuthOTPSent extends AuthState {
+  final String verificationId;
+  final String phoneNumber;
+
+  const AuthOTPSent({required this.verificationId, required this.phoneNumber});
+
+  @override
+  List<Object?> get props => [verificationId, phoneNumber];
+}
+
+class AuthOTPVerifying extends AuthState {
+  const AuthOTPVerifying();
+}

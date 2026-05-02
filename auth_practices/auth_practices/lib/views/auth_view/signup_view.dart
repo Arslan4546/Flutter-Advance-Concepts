@@ -47,28 +47,18 @@ class _SignupViewState extends State<SignupView> {
     return BlocListener<AuthBloc, AuthState>(
       listenWhen: (previous, current) {
         // Always listen to state changes
-        print(
-          '🎯 listenWhen - Previous: ${previous.runtimeType}, Current: ${current.runtimeType}',
-        );
         return true;
       },
       listener: (context, state) {
-        print('🔔 SignupView BlocListener - State: ${state.runtimeType}');
-
         if (state is AuthAuthenticated) {
-          print('✅ AuthAuthenticated - User: ${state.user.email}');
-          print('📍 Attempting navigation to /home');
-
           // Use WidgetsBinding to ensure navigation happens after build
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (context.mounted) {
-              print('📍 Executing context.go(/home)');
               context.go('/home');
 
               // Show success message after navigation
               Future.delayed(const Duration(milliseconds: 500), () {
                 if (context.mounted) {
-                  print('🎉 Showing success Flushbar');
                   FlushbarHelper.showSuccess(
                     context: context,
                     message: 'Welcome! You\'re signed in successfully 🎉',
@@ -79,7 +69,6 @@ class _SignupViewState extends State<SignupView> {
             }
           });
         } else if (state is AuthError) {
-          print('❌ AuthError - Message: ${state.message}');
           FlushbarHelper.showError(
             context: context,
             message: state.message,
