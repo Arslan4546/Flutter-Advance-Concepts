@@ -1,7 +1,7 @@
 import 'package:auth_practices/bloc/otp_verification/otp_verification_event.dart';
 import 'package:auth_practices/bloc/otp_verification/otp_verification_state.dart';
 import 'package:auth_practices/core/services/phone_auth_service.dart';
-import 'package:auth_practices/core/utils/phone_ath_errors.dart';
+import 'package:auth_practices/core/utils/phone_auth_errors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// BLoC for handling OTP verification
@@ -46,3 +46,4 @@ class OtpVerificationBloc
     emit(const OtpVerificationInitial());
   }
 }
+

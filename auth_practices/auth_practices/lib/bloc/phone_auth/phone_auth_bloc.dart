@@ -1,8 +1,7 @@
 import 'package:auth_practices/bloc/phone_auth/phone_auth_event.dart';
 import 'package:auth_practices/bloc/phone_auth/phone_auth_state.dart';
 import 'package:auth_practices/core/services/phone_auth_service.dart';
-
-import 'package:auth_practices/core/utils/phone_ath_errors.dart';
+import 'package:auth_practices/core/utils/phone_auth_errors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -102,3 +101,4 @@ class PhoneAuthBloc extends Bloc<PhoneAuthEvent, PhoneAuthState> {
     return '+92$cleanNumber';
   }
 }
+

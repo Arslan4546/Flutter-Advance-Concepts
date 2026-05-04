@@ -43,7 +43,7 @@ class HomeView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 28),
-                      // ── Top bar ──────────────────────────────────────────
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -130,7 +130,7 @@ class HomeView extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 36),
-                      // ── User info card ────────────────────────────────────
+
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.all(24),
@@ -203,7 +203,7 @@ class HomeView extends StatelessWidget {
 
                       // ── Auth provider chip ─────────────────────────────────
                       const SizedBox(height: 20),
-                      // ── Camera Section ────────────────────────────────
+
                       Expanded(
                         child: BlocBuilder<CameraBloc, CameraState>(
                           builder: (context, state) {
@@ -254,7 +254,7 @@ class HomeView extends StatelessWidget {
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(20),
                                         child: Image.file(
-                                          File(state.imageFile.path),
+                                          state.imageFile,
                                           width: 300,
                                           height: 300,
                                           fit: BoxFit.cover,

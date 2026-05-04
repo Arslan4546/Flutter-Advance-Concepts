@@ -4,9 +4,9 @@ import 'package:auth_practices/bloc/otp_verification/otp_verification_event.dart
 import 'package:auth_practices/bloc/otp_verification/otp_verification_state.dart';
 import 'package:auth_practices/core/utils/flushbar_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pinput/pinput.dart';
 
 class OtpScreen extends StatefulWidget {
   final String verificationId;
@@ -24,11 +24,8 @@ class OtpScreen extends StatefulWidget {
 
 class _OtpScreenState extends State<OtpScreen> {
   late final OtpVerificationBloc _otpBloc;
-  final List<TextEditingController> _otpControllers = List.generate(
-    6,
-    (_) => TextEditingController(),
-  );
-  final List<FocusNode> _focusNodes = List.generate(6, (_) => FocusNode());
+  final _pinController = TextEditingController();
+  final _focusNode = FocusNode();
 
   int _resendTimer = 60;
   Timer? _timer;
@@ -44,12 +41,8 @@ class _OtpScreenState extends State<OtpScreen> {
   void dispose() {
     _timer?.cancel();
     _otpBloc.close();
-    for (var controller in _otpControllers) {
-      controller.dispose();
-    }
-    for (var node in _focusNodes) {
-      node.dispose();
-    }
+    _pinController.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -69,21 +62,7 @@ class _OtpScreenState extends State<OtpScreen> {
     });
   }
 
-  void _onOTPChanged(int index, String value) {
-    if (value.length == 1 && index < 5) {
-      _focusNodes[index + 1].requestFocus();
-    } else if (value.isEmpty && index > 0) {
-      _focusNodes[index - 1].requestFocus();
-    }
-
-    if (index == 5 && value.isNotEmpty) {
-      _verifyOTP();
-    }
-  }
-
-  void _verifyOTP() {
-    final otp = _otpControllers.map((c) => c.text).join();
-
+  void _verifyOTP(String otp) {
     if (otp.length != 6) {
       FlushbarHelper.showError(
         context: context,
@@ -215,108 +194,78 @@ class _OtpScreenState extends State<OtpScreen> {
                         ),
                       ),
                       const SizedBox(height: 44),
-                      // OTP Input Fields
-                      Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: List.generate(6, (index) {
-                              return SizedBox(
-                                width: 48,
-                                height: 56,
-                                child: TextField(
-                                  controller: _otpControllers[index],
-                                  focusNode: _focusNodes[index],
-                                  textAlign: TextAlign.center,
-                                  keyboardType: TextInputType.number,
-                                  maxLength: 1,
-                                  enabled: !isLoading,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  decoration: InputDecoration(
-                                    counterText: '',
-                                    filled: true,
-                                    fillColor: Colors.white.withValues(
-                                      alpha: 0.05,
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: BorderSide(
-                                        color: hasError
-                                            ? Colors.red.withValues(alpha: 0.5)
-                                            : Colors.white.withValues(
-                                                alpha: 0.1,
-                                              ),
-                                        width: 1.5,
-                                      ),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: BorderSide(
-                                        color: hasError
-                                            ? Colors.red.withValues(alpha: 0.5)
-                                            : Colors.white.withValues(
-                                                alpha: 0.1,
-                                              ),
-                                        width: 1.5,
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: BorderSide(
-                                        color: hasError
-                                            ? Colors.red
-                                            : const Color(0xFF43A047),
-                                        width: 2,
-                                      ),
-                                    ),
-                                  ),
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly,
-                                  ],
-                                  onChanged: (value) =>
-                                      _onOTPChanged(index, value),
-                                  onTap: () {
-                                    _otpControllers[index]
-                                        .selection = TextSelection.fromPosition(
-                                      TextPosition(
-                                        offset:
-                                            _otpControllers[index].text.length,
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
-                            }),
-                          ),
-                          // Error message from Bloc state
-                          if (hasError)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 12),
-                              child: Row(
-                                children: [
-                                  const Icon(
-                                    Icons.error_outline,
-                                    color: Colors.redAccent,
-                                    size: 16,
-                                  ),
-                                  const SizedBox(width: 6),
-                                  Expanded(
-                                    child: Text(
-                                      state.message,
-                                      style: const TextStyle(
-                                        color: Colors.redAccent,
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                      // OTP Input with Pinput
+                      Center(
+                        child: Pinput(
+                          controller: _pinController,
+                          focusNode: _focusNode,
+                          length: 6,
+                          enabled: !isLoading,
+                          defaultPinTheme: PinTheme(
+                            width: 52,
+                            height: 56,
+                            textStyle: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.05),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: hasError
+                                    ? Colors.red.withValues(alpha: 0.5)
+                                    : Colors.white.withValues(alpha: 0.1),
+                                width: 1.5,
                               ),
                             ),
-                        ],
+                          ),
+                          focusedPinTheme: PinTheme(
+                            width: 52,
+                            height: 56,
+                            textStyle: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.08),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: hasError
+                                    ? Colors.red
+                                    : const Color(0xFF43A047),
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                          errorPinTheme: PinTheme(
+                            width: 52,
+                            height: 56,
+                            textStyle: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.red.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.red, width: 2),
+                            ),
+                          ),
+                          onCompleted: (pin) => _verifyOTP(pin),
+                          onChanged: (value) {
+                            // Clear error when user starts typing
+                            if (hasError && value.isNotEmpty) {
+                              setState(() {});
+                            }
+                          },
+                          errorText: hasError ? state.message : null,
+                          errorTextStyle: const TextStyle(
+                            color: Colors.redAccent,
+                            fontSize: 13,
+                          ),
+                        ),
                       ),
                       const SizedBox(height: 40),
                       // Verify button
@@ -346,7 +295,9 @@ class _OtpScreenState extends State<OtpScreen> {
                             ],
                           ),
                           child: ElevatedButton(
-                            onPressed: isLoading ? null : _verifyOTP,
+                            onPressed: isLoading
+                                ? null
+                                : () => _verifyOTP(_pinController.text),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.transparent,
                               shadowColor: Colors.transparent,
@@ -388,8 +339,9 @@ class _OtpScreenState extends State<OtpScreen> {
                               )
                             : GestureDetector(
                                 onTap: () {
-                                  // TODO: Implement resend OTP
+                                  _pinController.clear();
                                   _startResendTimer();
+                                  // TODO: Implement resend OTP API call
                                 },
                                 child: const Text(
                                   'Resend OTP',

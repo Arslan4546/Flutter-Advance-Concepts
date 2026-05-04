@@ -1,4 +1,4 @@
-import 'package:auth_practices/core/utils/phone_ath_errors.dart';
+import 'package:auth_practices/core/utils/phone_auth_errors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 /// Simple repository for authentication operations
@@ -80,3 +80,4 @@ class PhoneAuthService {
     }
   }
 }
+
