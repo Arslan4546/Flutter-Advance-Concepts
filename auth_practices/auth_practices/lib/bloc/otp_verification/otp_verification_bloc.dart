@@ -46,4 +46,3 @@ class OtpVerificationBloc
     emit(const OtpVerificationInitial());
   }
 }
-
