@@ -12,9 +12,11 @@ import 'package:go_router/go_router.dart';
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
   routes: [
+    // Routes for login / sign up
     GoRoute(path: '/', builder: (context, state) => const SplashView()),
     GoRoute(path: '/login', builder: (context, state) => const LoginView()),
     GoRoute(path: '/signup', builder: (context, state) => const SignupView()),
+
     GoRoute(
       path: '/phone-auth',
       builder: (context, state) => const PhoneScreenView(),

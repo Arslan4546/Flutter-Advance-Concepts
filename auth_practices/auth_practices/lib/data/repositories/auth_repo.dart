@@ -54,10 +54,6 @@ class AuthRepo {
 
   String mapFirebaseError(String code) {
     switch (code) {
-      // =========================================================
-      // EMAIL / PASSWORD SIGNUP + LOGIN ERRORS
-      // =========================================================
-
       case 'invalid-email':
         return 'Please enter a valid email address.';
 
@@ -105,10 +101,6 @@ class AuthRepo {
 
       case 'invalid-user-token':
         return 'Authentication session is invalid. Please login again.';
-
-      // =========================================================
-      // PHONE AUTHENTICATION ERRORS
-      // =========================================================
 
       case 'invalid-phone-number':
         return 'Invalid phone number format. Please check and try again.';

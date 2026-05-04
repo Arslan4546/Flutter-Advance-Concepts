@@ -11,7 +11,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthCheckRequested>(_onAuthCheckRequested);
     on<AuthSignUpRequested>(_onSignUpRequested);
     on<AuthSignInRequested>(_onSignInRequested);
-
     on<AuthSignOutRequested>(_onSignOutRequested);
   }
 
@@ -54,6 +53,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     emit(const AuthEmailLoading());
+
+    // Add delay to make loading visible (REMOVE THIS IN PRODUCTION)
+    await Future.delayed(const Duration(seconds: 2));
+
     try {
       final user = await _authRepo.signIn(
         email: event.email,

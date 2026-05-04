@@ -2,9 +2,9 @@ import 'package:auth_practices/bloc/auth_bloc/auth_bloc.dart';
 import 'package:auth_practices/bloc/auth_bloc/auth_event.dart';
 import 'package:auth_practices/bloc/auth_bloc/auth_state.dart';
 import 'package:auth_practices/bloc/camera_bloc/camera_bloc.dart';
-import 'package:auth_practices/views/auth_view/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:universal_io/io.dart';
 
 class HomeView extends StatelessWidget {
@@ -15,10 +15,7 @@ class HomeView extends StatelessWidget {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthUnauthenticated) {
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (_) => const LoginView()),
-            (route) => false,
-          );
+          context.go("/login");
         }
       },
       child: Scaffold(

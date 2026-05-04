@@ -44,14 +44,29 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
+      listenWhen: (previous, current) {
+        // Only listen to success and error states, not loading
+        return current is AuthAuthenticated || current is AuthError;
+      },
       listener: (context, state) async {
         if (state is AuthAuthenticated) {
-          context.go('/home');
-          await FlushbarHelper.showError(
-            context: context,
-            message: "Welcome! You\'re signed in successfully 🎉",
-            title: 'Sign In Successflly',
-          );
+          // Use WidgetsBinding to ensure navigation happens after build
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (context.mounted) {
+              context.go('/home');
+
+              // Show success message after navigation
+              Future.delayed(const Duration(milliseconds: 500), () {
+                if (context.mounted) {
+                  FlushbarHelper.showSuccess(
+                    context: context,
+                    message: 'Welcome! You\'re signed in successfully 🎉',
+                    title: 'Success',
+                  );
+                }
+              });
+            }
+          });
         } else if (state is AuthError) {
           await FlushbarHelper.showError(
             context: context,
